@@ -21,7 +21,7 @@ class DNS extends DNSClient {
       const resolveNext = (reason, data) => {
         this.logger.error(`DNS [${server}]`, reason, data);
         if (servers.length > 1) {
-          return this.resolveMsg(dnsMessage, servers.slice(1));
+          return this.resolveMsg(dnsMessage, servers.slice(1)).then(resolve, reject);
         } else if (data != null) {
           return resolve({ message: data, source: server });
         } else {
@@ -35,7 +35,7 @@ class DNS extends DNSClient {
       const port = +serverInfo[1] || 53;
       const client = dgram.createSocket('udp4');
       client.on('message', (msg) => {
-        this.logger.info('message', msg);
+        // this.logger.info('message', msg);
         const packet = DnsPacket.parse(msg);
         if (packet.header.rcode != DnsPacket.consts.NAME_TO_RCODE.NOERROR) {
           return resolveNext(
