@@ -52,7 +52,11 @@ class DoH extends DNS {
         resolveNext('timeout')
       }, 500);
       // this.logger.info(base64);
-      fetch(`${server}?dns=${base64}`).then(async response => {
+      fetch(`${server}?dns=${base64}`, {
+        "headers": {
+          "accept": "application/dns-message",
+        },
+      }).then(async response => {
         clearTimeout(timeoutId);
         // this.logger.log('success', x, x.headers);
         if (response.status != 200) {
